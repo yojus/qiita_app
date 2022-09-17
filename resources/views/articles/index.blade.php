@@ -9,7 +9,16 @@
 </head>
 
 <body>
-
+    <h1>記事一覧</h1>
+    @if (!empty($articles))
+        <ul>
+            @foreach ($articles as $article)
+                <li>
+                    {{ $article->title }}
+                </li>
+            @endforeach
+        </ul>
+    @endif
 </body>
 
 </html>
