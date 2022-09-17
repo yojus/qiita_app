@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class ArticleController extends Controller
 {
@@ -13,7 +14,34 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        $method = 'GET';
+        $tag_id = 'PHP';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/tags/' . $tag_id . '/items';
+
+        // $optionsにトークンを指定 
+        // Bearerの後ろスペースが入る
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+            ],
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        // try catchでエラー時の処理を書く
+        try {
+            // データを取得し、JSON形式からPHPの変数に変換
+            $response = $client->request($method, $url, $options);
+            $body = $response->getBody();
+            $articles = json_decode($body, false);
+        } catch (\Throwable $th) {
+            $articles = null;
+        }
+
+        return view('articles.index')->with(compact('articles'));
     }
 
     /**
