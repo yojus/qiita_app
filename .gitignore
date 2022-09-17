@@ -13,3 +13,9 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+
+# 直接ファイル名を書く方法
+# API_test.rest
+# *ファイル名一部でも可
+*.rest
+DS_store
