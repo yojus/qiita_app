@@ -224,7 +224,44 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $method = 'PATCH';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/items/' . $id;
+
+        // スペース区切りの文字列を配列に変換し、JSON形式に変換
+        $tag_array = explode(' ', $request->tags);
+        $tags = array_map(function ($tag) {
+            return ['name' => $tag];
+        }, $tag_array);
+
+        // 送信するデータを整形
+        $data = [
+            'title' => $request->title,
+            'body' => $request->body,
+            'private' => $request->private == "true" ? true : false,
+            'tags' => $tags
+        ];
+
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'json' => $data,
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        try {
+            // データを取得し、JSON形式からPHPの変数に変換
+            $response = $client->request($method, $url, $options);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return back()->withErrors(['error' => $e->getResponse()->getReasonPhrase()]);
+        }
+        return redirect()->route('articles.index')->with('flash_message', '記事の更新に成功しました。');
     }
 
     /**
