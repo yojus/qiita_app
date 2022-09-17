@@ -298,6 +298,27 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $method = 'DELETE';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/items/' . $id;
+
+        // $optionsにトークンを指定
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+            ],
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        try {
+            $response = $client->request($method, $url, $options);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return back()->withErrors(['error' => $e->getResponse()->getReasonPhrase()]);
+        }
+
+        return redirect()->route('articles.index')->with('flash_message', '記事を削除しました');;
     }
 }
