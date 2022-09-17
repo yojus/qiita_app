@@ -11,7 +11,8 @@
 <body>
     <h1>{{ $article->title }}</h1>
     <div>
-        {!! Str::markdown($article->body, ['html_input' => 'escape']) !!}
+        {{-- {!! Str::markdown($article->body, ['html_input' => 'escape']) !!} --}}
+        {{ $article->html }}
     </div>
 </body>
 

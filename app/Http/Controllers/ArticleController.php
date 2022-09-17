@@ -94,6 +94,15 @@ class ArticleController extends Controller
             $response = $client->request($method, $url, $options);
             $body = $response->getBody();
             $article = json_decode($body, false);
+
+            // 変換するクラスをインスタンス化して設定を追加
+            $parser = new \cebe\markdown\GithubMarkdown();
+            $parser->keepListStartNumber = true;  // olタグの番号の初期化を有効にする
+            $parser->enableNewlines = true;  // 改行を有効にする
+
+            // MarkdownをHTML文字列に変換し、HTMLに変換(エスケープする)
+            $html_string = $parser->parse($article->body);
+            $article->html = new \Illuminate\Support\HtmlString($html_string);
         } catch (\Throwable $th) {
             return back();
         }
