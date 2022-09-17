@@ -14,11 +14,16 @@
         <ul>
             @foreach ($articles as $article)
                 <li>
-                    {{ $article->title }}
+                    {{-- <a href="/articles/{{ $articles->id }}"></a> --}}
+                    <a href="{{ route('articles.show', $article->id) }}">
+                        {{ $article->title }}
+                    </a>
                 </li>
             @endforeach
         </ul>
     @endif
+    {{-- buttonにはtypeをつけたほうが良い --}}
+    <button type="button" onclick="location.href='{{ route('articles.create') }}' ">記事投稿</button>
 </body>
 
 </html>
