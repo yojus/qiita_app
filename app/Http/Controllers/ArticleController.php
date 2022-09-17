@@ -46,7 +46,7 @@ class ArticleController extends Controller
         $per_page = 30;
 
         // QIITA_URLの値を取得してURLを定義
-        $url = config('qiita.url') . '/api/v2/authenticated_user'. '/items?per_page=' . $per_page;
+        $url = config('qiita.url') . '/api/v2/authenticated_user' . '/items?per_page=' . $per_page;
 
         // $optionsにトークンを指定 
         // Bearerの後ろスペースが入る
@@ -182,7 +182,37 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $method = 'GET';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/items/' . $id;
+
+        // $optionsにトークンを指定
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+            ],
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        try {
+            // データを取得し、JSON形式からPHPの変数に変換
+            $response = $client->request($method, $url, $options);
+            $body = $response->getBody();
+            $article = json_decode($body, false);
+
+            // tagsを配列からスペース区切りに変換
+            $tag_array = array_map(function ($tag) {
+                return $tag->name;
+            }, $article->tags);
+            $article->tags = implode(' ', $tag_array);
+        } catch (\Throwable $th) {
+            return back();
+        }
+
+        return view('articles.edit')->with(compact('article'));
     }
 
     /**
