@@ -11,6 +11,9 @@
 
 <body>
     <button type="button" onclick="location.href='{{ route('articles.index') }}' ">一覧へ戻る</button>
+    @if ($article->user->permanent_id == $user->permanent_id)
+        <button type="button" onclick="location.href='{{ route('articles.edit, $article->id') }}' ">編集する</button>
+    @endif
     <h1>{{ $article->title }}</h1>
     {{-- <div> --}}
     <div class="markdown-body">

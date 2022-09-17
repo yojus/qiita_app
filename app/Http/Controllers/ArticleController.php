@@ -195,6 +195,8 @@ class ArticleController extends Controller
             return back();
         }
 
+        // dd($article, $user);
+
         return view('articles.show')->with(compact('article', 'user'));
     }
 
