@@ -29,6 +29,7 @@
         </div>
         <input type="submit" value="投稿する">
     </form>
+    <button type="button" onclick="location.href='{{ route('articles.index') }}' ">一覧へ戻る</button>
 </body>
 
 </html>
