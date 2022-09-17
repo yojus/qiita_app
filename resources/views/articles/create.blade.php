@@ -9,6 +9,13 @@
 </head>
 
 <body>
+    @if (!empty($errors))
+        <div class="error">
+            @foreach ($errors->all() as $error)
+                {{ $error }}
+            @endforeach
+        </div>
+    @endif
     {{-- フォームの送信先はcreateアクション --}}
     <form action="{{ route('articles.store') }}" method="post">
         @csrf
