@@ -5,3 +5,4 @@ return [
 ];
 
 // config('qiita.*($key, urlのこと)')で読み込める
+
