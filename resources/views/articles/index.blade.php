@@ -33,11 +33,11 @@
 
     <ul>
         @foreach ($my_articles as $my_article)
-        <li>
-            <a href="{{ route('articles.show', $article->id) }}">
-                {{ $my_article->title }} 
-            </a>
-        </li>
+            <li>
+                <a href="{{ route('articles.show', $my_article->id) }}">
+                    {{ $my_article->title }}
+                </a>
+            </li>
         @endforeach
     </ul>
 
