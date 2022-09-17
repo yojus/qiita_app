@@ -14,6 +14,7 @@
     @if ($article->user->permanent_id == $user->permanent_id)
         <button type="button" onclick="location.href='{{ route('articles.edit', $article->id) }}' ">編集する</button>
         <button type="submit" onclick="if(!confirm('本当に削除していいですか？')){return false};">削除する</button>
+        {{-- formタグにidをつけることで,buttonをformの外に出してもok --}}
         <form action="{{ route('articles.destroy', $article->id) }}" method="post" id="delete-form"></form>
         @csrf
         @method('DELETE')
