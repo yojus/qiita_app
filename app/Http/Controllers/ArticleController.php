@@ -63,7 +63,44 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $method = 'POST';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/items';
+
+        // スペース区切りの文字列を配列に変換し、JSON形式に変換
+        $tag_array = explode(' ', $request->tags);
+        $tags = array_map(function ($tag) {
+            return ['name' => $tag];
+        }, $tag_array);
+
+        // 送信するデータを整形
+        $data = [
+            'title' => $request->title,
+            'body' => $request->body,
+            'private' => $request->private == "true" ? true : false,
+            'tags' => $tags
+        ];
+
+        $options = [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+            ],
+            'json' => $data,
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        try {
+            // データを送信する
+            $client->request($method, $url, $options);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // GuzzleHttpで発生したエラーの場合はcatchする
+            return back()->withErrors(['error' => $e->getResponse()->getReasonPhrase()]);
+        }
+        return redirect()->route('articles.index')->with('flash_message', '記事の投稿に成功しました。');
     }
 
     /**
