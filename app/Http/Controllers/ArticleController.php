@@ -171,7 +171,31 @@ class ArticleController extends Controller
             return back();
         }
 
-        return view('articles.show')->with(compact('article'));
+        $method = 'GET';
+
+        // QIITA_URLの値を取得してURLを定義
+        $url = config('qiita.url') . '/api/v2/authenticated_user';
+
+        // $optionsにトークンを指定
+        $options = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('qiita.token'),
+            ],
+        ];
+
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
+        try {
+            // データを取得し、JSON形式からPHPの変数に変換
+            $response = $client->request($method, $url, $options);
+            $body = $response->getBody();
+            $user = json_decode($body, false);
+        } catch (\Throwable $th) {
+            return back();
+        }
+
+        return view('articles.show')->with(compact('article', 'user'));
     }
 
     /**
