@@ -9,6 +9,11 @@
 </head>
 
 <body>
+    @if (session('flash_message'))
+        <div class="flash_message">
+            {{ session('flash_message') }}
+        </div>
+    @endif
     <h1>記事一覧</h1>
     @if (!empty($articles))
         <ul>
